@@ -143,7 +143,7 @@ step "Creating development theme"
 theme_push_log="$(mktemp)"
 shopify theme push --development --json $theme_root > "$theme_push_log" && cat "$theme_push_log"
 preview_url="$(cat "$theme_push_log" | tail -n 1 | jq -r '.theme.preview_url')"
-log "preview url :- $preview_url"
+echo "preview url :- $preview_url"
 log "theme log :- $theme_push_log"
 step "Configuring Lighthouse CI"
 
