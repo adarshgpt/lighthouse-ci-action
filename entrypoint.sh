@@ -131,7 +131,6 @@ shopify login
 
 host="https://${SHOP_STORE#*(https://|http://)}"
 log "host :- https://${SHOP_STORE#*(https://|http://)}"
-log "store :- $INPUT_STORE"
 theme_root="${THEME_ROOT:-.}"
 
 # Use the $SHOP_PASSWORD defined as a Github Secret for password protected stores.
@@ -203,6 +202,7 @@ module.exports = async (browser) => {
   // Get password cookie if password is set
   if ('$shop_password' !== '') {
     console.error('Getting password cookie...');
+    console.log('Host :- ',$host)
     await page.goto('$host/password');
     await page.waitForSelector('form[action*=password] input[type="password"]');
     await page.\$eval('form[action*=password] input[type="password"]', input => input.value = '$shop_password');
