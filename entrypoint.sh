@@ -165,37 +165,37 @@ step "Configuring Lighthouse CI"
 # fi
 
 # Disable redirects + preview bar
-query_string="?_fd=0&pb=0"
-min_score_performance="${LHCI_MIN_SCORE_PERFORMANCE:-0.6}"
-min_score_accessibility="${LHCI_MIN_SCORE_ACCESSIBILITY:-0.9}"
+# query_string="?_fd=0&pb=0"
+# min_score_performance="${LHCI_MIN_SCORE_PERFORMANCE:-0.6}"
+# min_score_accessibility="${LHCI_MIN_SCORE_ACCESSIBILITY:-0.9}"
 
-cat <<- EOF > lighthouserc.yml
-ci:
-  collect:
-    url:
-      - "$host/$query_string"
-      - "$host/products/$product_handle$query_string"
-      - "$host/collections/$collection_handle$query_string"
-    puppeteerScript: './setPreviewCookies.js'
-    puppeteerLaunchOptions:
-      args:
-        - "--no-sandbox"
-        - "--disable-setuid-sandbox"
-        - "--disable-dev-shm-usage"
-        - "--disable-gpu"
-  upload:
-    target: temporary-public-storage
-  assert:
-    assertions:
-      "categories:performance":
-        - error
-        - minScore: $min_score_performance
-          aggregationMethod: median-run
-      "categories:accessibility":
-        - error
-        - minScore: $min_score_accessibility
-          aggregationMethod: median-run
-EOF
+# cat <<- EOF > lighthouserc.yml
+# ci:
+#   collect:
+#     url:
+#       - "$host/$query_string"
+#       - "$host/products/$product_handle$query_string"
+#       - "$host/collections/$collection_handle$query_string"
+#     puppeteerScript: './setPreviewCookies.js'
+#     puppeteerLaunchOptions:
+#       args:
+#         - "--no-sandbox"
+#         - "--disable-setuid-sandbox"
+#         - "--disable-dev-shm-usage"
+#         - "--disable-gpu"
+#   upload:
+#     target: temporary-public-storage
+#   assert:
+#     assertions:
+#       "categories:performance":
+#         - error
+#         - minScore: $min_score_performance
+#           aggregationMethod: median-run
+#       "categories:accessibility":
+#         - error
+#         - minScore: $min_score_accessibility
+#           aggregationMethod: median-run
+# EOF
 
 cat <<-EOF > setPreviewCookies.js
 module.exports = async (browser) => {
