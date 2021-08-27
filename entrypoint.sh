@@ -130,6 +130,7 @@ export SHOPIFY_PASSWORD="$SHOP_APP_PASSWORD"
 shopify login
 
 host="https://${SHOP_STORE#*(https://|http://)}"
+log "host :- https://${SHOP_STORE#*(https://|http://)}"
 theme_root="${THEME_ROOT:-.}"
 
 # Use the $SHOP_PASSWORD defined as a Github Secret for password protected stores.
@@ -142,7 +143,7 @@ theme_push_log="$(mktemp)"
 shopify theme push --development --json $theme_root > "$theme_push_log" && cat "$theme_push_log"
 preview_url="$(cat "$theme_push_log" | tail -n 1 | jq -r '.theme.preview_url')"
 log "preview url :- $preview_url"
-log "host :- $host"
+
 step "Configuring Lighthouse CI"
 
 if [[ -n "${SHOP_PRODUCT_HANDLE+x}" ]]; then
