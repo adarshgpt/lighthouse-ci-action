@@ -135,7 +135,7 @@ log "store :- $INPUT_STORE"
 theme_root="${THEME_ROOT:-.}"
 
 # Use the $SHOP_PASSWORD defined as a Github Secret for password protected stores.
-[[ -z ${SHOP_PASSWORD+x} ]] && shop_password='' || shop_password="$SHOP_PASSWORD"
+shop_password="$SHOP_PASSWORD"
 
 log "Will run Lighthouse CI on the $host"
 
