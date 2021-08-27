@@ -60,7 +60,7 @@ api_request() {
   local password="$SHOP_APP_PASSWORD"
   local err="$(mktemp)"
   local out="$(mktemp)"
-
+  echo "url in echo $1"
   set +e
   curl -sS -f -X GET -u "$username:$password" "$url" \
     1> "$out" 2> "$err"
