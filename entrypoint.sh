@@ -111,15 +111,21 @@ cleanup() {
 trap 'cleanup $?' EXIT
 
 if ! is_installed lhci; then
-  step "Installing Lighthouse CI & WebPageTest"
-  log npm install -g @lhci/cli@0.7.x puppeteer webpagetest
-  npm install -g @lhci/cli@0.7.x puppeteer webpagetest
+  step "Installing Lighthouse CI"
+  log npm install -g @lhci/cli@0.7.x puppeteer
+  npm install -g @lhci/cli@0.7.x puppeteer
 fi
 
 if ! is_installed shopify; then
   step "Installing Shopify CLI"
   log "gem install shopify"
   gem install shopify
+fi
+
+if ! is_installed webpagetest; then
+  step "Installing WebPageTest CLI"
+  log "npm install webpagetest"
+  npm install webpagetest
 fi
 
 step "Configuring shopify CLI"
