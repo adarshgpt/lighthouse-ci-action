@@ -60,7 +60,7 @@ api_request() {
   local password="$SHOP_APP_PASSWORD"
   local err="$(mktemp)"
   local out="$(mktemp)"
-  echo url
+
   set +e
   curl -sS -f -X GET -u "$username:$password" "$url" \
     1> "$out" 2> "$err"
@@ -131,10 +131,11 @@ shopify login
 
 host="https://${SHOP_STORE#*(https://|http://)}"
 log "host :- https://${SHOP_STORE#*(https://|http://)}"
+log "stroe :- ${SHOP_STORE}"
 theme_root="${THEME_ROOT:-.}"
 
 # Use the $SHOP_PASSWORD defined as a Github Secret for password protected stores.
-shop_password="$SHOP_PASSWORD"
+[[ -z ${SHOP_PASSWORD+x} ]] && shop_password='' || shop_password="$SHOP_PASSWORD"
 
 log "Will run Lighthouse CI on the $host"
 
@@ -142,26 +143,27 @@ step "Creating development theme"
 theme_push_log="$(mktemp)"
 shopify theme push --development --json $theme_root > "$theme_push_log" && cat "$theme_push_log"
 preview_url="$(cat "$theme_push_log" | tail -n 1 | jq -r '.theme.preview_url')"
-echo "echoing preview url :- $preview_url"
+log "preview url :- $preview_url"
+log "theme log :- $theme_push_log"
 step "Configuring Lighthouse CI"
 
-# if [[ -n "${SHOP_PRODUCT_HANDLE+x}" ]]; then
-#   product_handle="$SHOP_PRODUCT_HANDLE"
-# else
-#   log "Fetching product handle"
-#   product_response="$(api_request "$host/admin/api/2021-04/products.json?published_status=published&limit=1")"
-#   product_handle="$(echo "$product_response" | jq -r '.products[0].handle')"
-#   log "Using $product_handle"
-# fi
+if [[ -n "${SHOP_PRODUCT_HANDLE+x}" ]]; then
+  product_handle="$SHOP_PRODUCT_HANDLE"
+else
+  log "Fetching product handle"
+  product_response="$(api_request "$host/admin/api/2021-04/products.json?published_status=published&limit=1")"
+  product_handle="$(echo "$product_response" | jq -r '.products[0].handle')"
+  log "Using $product_handle"
+fi
 
-# if [[ -n "${SHOP_COLLECTION_HANDLE+x}" ]]; then
-#   collection_handle="$SHOP_COLLECTION_HANDLE"
-# else
-#   log "Fetching collection handle"
-#   collection_response="$(api_request "$host/admin/api/2021-04/custom_collections.json?published_status=published&limit=1")"
-#   collection_handle="$(echo "$collection_response" | jq -r '.custom_collections[0].handle')"
-#   log "Using $collection_handle"
-# fi
+if [[ -n "${SHOP_COLLECTION_HANDLE+x}" ]]; then
+  collection_handle="$SHOP_COLLECTION_HANDLE"
+else
+  log "Fetching collection handle"
+  collection_response="$(api_request "$host/admin/api/2021-04/custom_collections.json?published_status=published&limit=1")"
+  collection_handle="$(echo "$collection_response" | jq -r '.custom_collections[0].handle')"
+  log "Using $collection_handle"
+fi
 
 # Disable redirects + preview bar
 query_string="?_fd=0&pb=0"
@@ -173,6 +175,8 @@ ci:
   collect:
     url:
       - "$host/$query_string"
+      - "$host/products/$product_handle$query_string"
+      - "$host/collections/$collection_handle$query_string"
     puppeteerScript: './setPreviewCookies.js'
     puppeteerLaunchOptions:
       args:
@@ -202,7 +206,6 @@ module.exports = async (browser) => {
   // Get password cookie if password is set
   if ('$shop_password' !== '') {
     console.error('Getting password cookie...');
-    console.log('Host :- ',$host)
     await page.goto('$host/password');
     await page.waitForSelector('form[action*=password] input[type="password"]');
     await page.\$eval('form[action*=password] input[type="password"]', input => input.value = '$shop_password');
