@@ -111,9 +111,9 @@ cleanup() {
 trap 'cleanup $?' EXIT
 
 if ! is_installed lhci; then
-  step "Installing Lighthouse CI"
-  log npm install -g @lhci/cli@0.7.x puppeteer
-  npm install -g @lhci/cli@0.7.x puppeteer
+  step "Installing Lighthouse CI & WebPageTest"
+  log npm install -g @lhci/cli@0.7.x puppeteer webpagetest
+  npm install -g @lhci/cli@0.7.x puppeteer webpagetest
 fi
 
 if ! is_installed shopify; then
