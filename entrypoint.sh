@@ -18,7 +18,7 @@
 [[ -n "$INPUT_PRODUCT_HANDLE" ]]    && export SHOP_PRODUCT_HANDLE="$INPUT_PRODUCT_HANDLE"
 [[ -n "$INPUT_COLLECTION_HANDLE" ]] && export SHOP_COLLECTION_HANDLE="$INPUT_COLLECTION_HANDLE"
 [[ -n "$INPUT_THEME_ROOT" ]]        && export THEME_ROOT="$INPUT_THEME_ROOT"
-
+[[ -n "$INPUT_WPT_API_KEY" ]]       && export WPT_API_KEY="$INPUT_WPT_API_KEY"
 
 # Optional, these are used by Lighthouse CI to add pass/fail checks on
 # the GitHub Pull Request.
@@ -38,6 +38,7 @@ export PATH="$PATH:$npm_config_prefix/bin"
 
 echo "SHOP_APP_ID: ${SHOP_APP_ID}"
 echo "SHOP_STORE: ${SHOP_STORE}"
+echo "WPT_API_KEY: ${WPT_API_KEY}"
 
 # END of GitHub Action Specific Code
 ####################################################################
@@ -232,3 +233,6 @@ EOF
 
 step "Running Lighthouse CI"
 lhci autorun
+
+step "Running WebPageTest"
+webpagetest test $preview_url --key $WPT_API_KEY  --location SanJose_IE9
