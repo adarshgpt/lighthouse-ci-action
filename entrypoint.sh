@@ -29,8 +29,15 @@
 [[ -n "$INPUT_LHCI_MIN_SCORE_PERFORMANCE" ]]   && export LHCI_MIN_SCORE_PERFORMANCE="$INPUT_LHCI_MIN_SCORE_PERFORMANCE"
 [[ -n "$INPUT_LHCI_MIN_SCORE_ACCESSIBILITY" ]] && export LHCI_MIN_SCORE_ACCESSIBILITY="$INPUT_LHCI_MIN_SCORE_ACCESSIBILITY"
 
+
+
+
 # Add global node bin to PATH (from the Dockerfile)
 export PATH="$PATH:$npm_config_prefix/bin"
+
+
+log "SHOP_APP_ID: ${SHOP_APP_ID}"
+log "SHOP_STORE: ${SHOP_STORE}"
 
 # END of GitHub Action Specific Code
 ####################################################################
@@ -103,20 +110,6 @@ cleanup() {
 
 trap 'cleanup $?' EXIT
 
-log "SHOP_APP_ID: ${SHOP_APP_ID}"
-log "SHOP_STORE: ${SHOP_STORE}"
-log "SHOP_PRODUCT_HANDLE: ${SHOP_PRODUCT_HANDLE}"
-log "SHOP_COLLECTION_HANDLE: ${SHOP_COLLECTION_HANDLE}"
-log "THEME_ROOT: ${THEME_ROOT}"
-log "LHCI_MIN_SCORE_PERFORMANCE: ${LHCI_MIN_SCORE_PERFORMANCE}"
-log "LHCI_MIN_SCORE_ACCESSIBILITY: ${LHCI_MIN_SCORE_ACCESSIBILITY}"
-## NEVER LOG secrets 
-# SHOP_APP_PASSWORD
-# SHOP_PASSWORD
-# LHCI_GITHUB_APP_TOKEN
-# LHCI_GITHUB_TOKEN
-
-
 if ! is_installed lhci; then
   step "Installing Lighthouse CI"
   log npm install -g @lhci/cli@0.7.x puppeteer
@@ -148,12 +141,12 @@ host="https://${SHOP_STORE#*(https://|http://)}"
 log "host :- https://${SHOP_STORE#*(https://|http://)}"
 log "stroe :- ${SHOP_STORE}"
 theme_root="${THEME_ROOT:-.}"
-
+url="${SHOP_STORE}"
+log "url :- ${url}"
 # Use the $SHOP_PASSWORD defined as a Github Secret for password protected stores.
 [[ -z ${SHOP_PASSWORD+x} ]] && shop_password='' || shop_password="$SHOP_PASSWORD"
 
 log "Will run Lighthouse CI on the $host"
-
 step "Creating development theme"
 theme_push_log="$(mktemp)"
 shopify theme push --development --json $theme_root > "$theme_push_log" && cat "$theme_push_log"
