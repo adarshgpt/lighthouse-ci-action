@@ -36,8 +36,8 @@
 export PATH="$PATH:$npm_config_prefix/bin"
 
 
-log "SHOP_APP_ID: ${SHOP_APP_ID}"
-log "SHOP_STORE: ${SHOP_STORE}"
+echo "SHOP_APP_ID: ${SHOP_APP_ID}"
+echo "SHOP_STORE: ${SHOP_STORE}"
 
 # END of GitHub Action Specific Code
 ####################################################################
