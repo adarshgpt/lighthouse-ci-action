@@ -125,7 +125,7 @@ fi
 
 if ! is_installed webpagetest; then
   step "Installing WebPageTest CLI"
-  log "npm install webpagetest"
+  log "npm install webpagetest -g"
   npm install webpagetest
 fi
 
@@ -235,4 +235,4 @@ step "Running Lighthouse CI"
 lhci autorun
 
 step "Running WebPageTest"
-webpagetest test $preview_url --key $WPT_API_KEY  --location SanJose_IE9
+webpagetest test $preview_url --key $WPT_API_KEY
