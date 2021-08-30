@@ -19,6 +19,7 @@
 [[ -n "$INPUT_COLLECTION_HANDLE" ]] && export SHOP_COLLECTION_HANDLE="$INPUT_COLLECTION_HANDLE"
 [[ -n "$INPUT_THEME_ROOT" ]]        && export THEME_ROOT="$INPUT_THEME_ROOT"
 
+
 # Optional, these are used by Lighthouse CI to add pass/fail checks on
 # the GitHub Pull Request.
 [[ -n "$INPUT_LHCI_GITHUB_APP_TOKEN" ]] && export LHCI_GITHUB_APP_TOKEN="$INPUT_LHCI_GITHUB_APP_TOKEN"
@@ -101,6 +102,20 @@ cleanup() {
 }
 
 trap 'cleanup $?' EXIT
+
+log "SHOP_APP_ID: ${SHOP_APP_ID}"
+log "SHOP_STORE: ${SHOP_STORE}"
+log "SHOP_PRODUCT_HANDLE: ${SHOP_PRODUCT_HANDLE}"
+log "SHOP_COLLECTION_HANDLE: ${SHOP_COLLECTION_HANDLE}"
+log "THEME_ROOT: ${THEME_ROOT}"
+log "LHCI_MIN_SCORE_PERFORMANCE: ${LHCI_MIN_SCORE_PERFORMANCE}"
+log "LHCI_MIN_SCORE_ACCESSIBILITY: ${LHCI_MIN_SCORE_ACCESSIBILITY}"
+## NEVER LOG secrets 
+# SHOP_APP_PASSWORD
+# SHOP_PASSWORD
+# LHCI_GITHUB_APP_TOKEN
+# LHCI_GITHUB_TOKEN
+
 
 if ! is_installed lhci; then
   step "Installing Lighthouse CI"
