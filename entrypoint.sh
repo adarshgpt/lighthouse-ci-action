@@ -235,4 +235,4 @@ step "Running Lighthouse CI"
 lhci autorun
 
 step "Running WebPageTest"
-./webpagetest test $preview_url --key $WPT_API_KEY
+webpagetest test $preview_url --key $WPT_API_KEY
