@@ -123,12 +123,6 @@ if ! is_installed shopify; then
   gem install shopify
 fi
 
-if ! is_installed webpagetest; then
-  step "Installing WebPageTest CLI"
-  log "npm install webpagetest -g"
-  npm install webpagetest
-fi
-
 step "Configuring shopify CLI"
 
 # Disable analytics
@@ -235,4 +229,4 @@ step "Running Lighthouse CI"
 lhci autorun
 
 step "Running WebPageTest"
-bat 'webpagetest test $preview_url --key $WPT_API_KEY'
+webpagetest test $preview_url --key $WPT_API_KEY
