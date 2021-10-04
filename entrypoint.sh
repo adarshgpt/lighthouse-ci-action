@@ -230,4 +230,4 @@ lhci autorun
 
 step "Running WebPageTest"
 npm i webpagetest -g
-webpagetest test $preview_url --key $WPT_API_KEY
+webpagetest test $host --key $WPT_API_KEY
